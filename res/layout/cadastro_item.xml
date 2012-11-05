@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/itemPicture"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/item_picture_description"
+            android:src="@drawable/ic_action_search" />
+
+        <EditText
+            android:id="@+id/editItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/itemPicture"
+            android:ems="10"
+            android:hint="@string/product_name" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/editItemGeoposition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/itemPicture"
+            android:layout_alignLeft="@+id/editItemName"
+            android:ems="10"
+            android:hint="@string/product_location_gps" />
+
+        <EditText
+            android:id="@+id/editItemCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/itemPicture"
+            android:ems="10"
+            android:hint="@string/category" />
+
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/editItemCategory"
+            android:text="@string/search" />
+
+        <EditText
+            android:id="@+id/editContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/buttonSearch"
+            android:layout_toLeftOf="@+id/buttonSearch"
+            android:ems="10"
+            android:hint="@string/contact" />
+
+        <Button
+            android:id="@+id/buttonExternal"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/buttonSearch"
+            android:text="@string/external_site_buscape" />
+
+        <EditText
+            android:id="@+id/editMinPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/buttonExternal"
+            android:layout_toLeftOf="@+id/buttonExternal"
+            android:ems="10"
+            android:hint="@string/min_price" />
+
+        <EditText
+            android:id="@+id/editMaxPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buttonExternal"
+            android:layout_toLeftOf="@+id/buttonExternal"
+            android:ems="10"
+            android:hint="@string/max_price" />
+
+        <CheckBox
+            android:id="@+id/checkPriceNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editMaxPrice"
+            android:text="@string/notify_price" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/save" />
+
+    </RelativeLayout>
+
+</ScrollView>
