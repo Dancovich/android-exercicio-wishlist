@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listItemDescription"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:paddingLeft="25dp"
+    android:drawableStart="@drawable/ic_action_search"
+    android:gravity="center_vertical"
+    android:hint="@string/item_description"
+    android:singleLine="true" />

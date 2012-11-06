@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 
 public class CadastrarItemFragment extends Fragment {
 	
-	public CadastrarItemFragment(){
-		super();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.cadastro_item, container);
+		return inflater.inflate(R.layout.cadastro_item, null);
 	}
 
 	@Override

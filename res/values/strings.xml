@@ -3,7 +3,7 @@
     <string name="app_name">Three Wishes</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Three Wishes</string>
     <string name="item_picture_description">Foto do item desejado</string>
     <string name="product_name">Nome do Produto</string>
     <string name="product_location_gps">Local (usando GPS)</string>
@@ -16,5 +16,6 @@
     <string name="notify_price">Notificar Preço</string>
     <string name="save">Salvar</string>
     <string name="menu_save">Salvar</string>
+    <string name="item_description">Descrição do Item</string>
 
 </resources>
