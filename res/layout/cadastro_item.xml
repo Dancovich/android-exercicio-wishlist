@@ -19,7 +19,8 @@
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/itemPicture"
         android:ems="10"
-        android:hint="@string/product_name" >
+        android:hint="@string/product_name"
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
@@ -31,7 +32,8 @@
         android:layout_alignBottom="@+id/itemPicture"
         android:layout_alignLeft="@+id/editItemName"
         android:ems="10"
-        android:hint="@string/product_location_gps" />
+        android:hint="@string/product_location_gps"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/editItemCategory"
@@ -40,7 +42,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/itemPicture"
         android:ems="10"
-        android:hint="@string/category" />
+        android:hint="@string/category"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonSearch"
@@ -57,7 +60,8 @@
         android:layout_alignBaseline="@+id/buttonSearch"
         android:layout_toLeftOf="@+id/buttonSearch"
         android:ems="10"
-        android:hint="@string/contact" />
+        android:hint="@string/contact"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonExternal"
@@ -74,7 +78,8 @@
         android:layout_alignTop="@+id/buttonExternal"
         android:layout_toLeftOf="@+id/buttonExternal"
         android:ems="10"
-        android:hint="@string/min_price" />
+        android:hint="@string/min_price"
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/editMaxPrice"
@@ -83,7 +88,8 @@
         android:layout_alignBottom="@+id/buttonExternal"
         android:layout_toLeftOf="@+id/buttonExternal"
         android:ems="10"
-        android:hint="@string/max_price" />
+        android:hint="@string/max_price"
+        android:inputType="number" />
 
     <CheckBox
         android:id="@+id/checkPriceNotification"

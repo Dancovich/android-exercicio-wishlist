@@ -17,5 +17,9 @@
     <string name="save">Salvar</string>
     <string name="menu_save">Salvar</string>
     <string name="item_description">Descrição do Item</string>
+    <string name="null_item_edit">O ID informado não corresponde a um item existente</string>
+    <string name="menu_new">Novo</string>
+    <string name="debug_newitem_attach_activity">Anexando form de cadastro à Activity</string>
+    <string name="debug_itemlist_attach_activity">Anexando lista de itens à Activity</string>
 
 </resources>

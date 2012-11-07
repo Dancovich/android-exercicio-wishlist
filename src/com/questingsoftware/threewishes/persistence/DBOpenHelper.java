@@ -1,7 +1,11 @@
 package com.questingsoftware.threewishes.persistence;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -50,6 +54,67 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		values.put("precoMaximo", item.getPrecoMaximo().toString());
 		
 		item.setId(db.insert(TABELA_WISHLIST,null,values));
+	}
+	
+	public static WishItem select(Long id,Context context){
+		SQLiteDatabase db = getInstance(context).getReadableDatabase();
+
+		Cursor c = db.rawQuery("select * from "+TABELA_WISHLIST+" where id = ?", new String[]{id.toString()});
+		
+		WishItem item = null;
+		if (c.moveToNext()){
+			item = new WishItem();
+			item.setId(c.getLong(c.getColumnIndex("id")));
+			item.setNome(c.getString(c.getColumnIndex("nome")));
+			item.setCategoria(c.getString(c.getColumnIndex("categoria")));
+			item.setLocal(c.getString(c.getColumnIndex("local")));
+			item.setContato(c.getString(c.getColumnIndex("contato")));
+			item.setPrecoMinimo(new BigDecimal(c.getString(c.getColumnIndex("precoMinimo"))));
+			item.setPrecoMaximo(new BigDecimal(c.getString(c.getColumnIndex("precoMaximo"))));
+		}
+		
+		c.close();
+		db.close();
+		return item;
+	}
+	
+	public static ArrayList<WishItem> selectAll(Context context){
+		SQLiteDatabase db = getInstance(context).getReadableDatabase();
+
+		Cursor c = db.rawQuery("select * from "+TABELA_WISHLIST,null);
+		
+		WishItem item = null;
+		ArrayList<WishItem> retorno = new ArrayList<WishItem>();
+		while (c.moveToNext()){
+			item = new WishItem();
+			item.setId(c.getLong(c.getColumnIndex("id")));
+			item.setNome(c.getString(c.getColumnIndex("nome")));
+			item.setCategoria(c.getString(c.getColumnIndex("categoria")));
+			item.setLocal(c.getString(c.getColumnIndex("local")));
+			item.setContato(c.getString(c.getColumnIndex("contato")));
+			item.setPrecoMinimo(new BigDecimal(c.getString(c.getColumnIndex("precoMinimo"))));
+			item.setPrecoMaximo(new BigDecimal(c.getString(c.getColumnIndex("precoMaximo"))));
+			
+			retorno.add(item);
+		}
+		
+		c.close();
+		db.close();
+		return retorno;
+	}
+
+	public static void update(WishItem itemEditado, Context context) {
+		SQLiteDatabase db = getInstance(context).getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put("nome", itemEditado.getNome());
+		values.put("categoria", itemEditado.getCategoria());
+		values.put("local", itemEditado.getLocal());
+		values.put("contato", itemEditado.getContato());
+		values.put("precoMinimo", itemEditado.getPrecoMinimo().toString());
+		values.put("precoMaximo", itemEditado.getPrecoMaximo().toString());
+		
+		db.update(TABELA_WISHLIST, null, "id=?", new String[]{itemEditado.getId().toString()});
 	}
 
 }
