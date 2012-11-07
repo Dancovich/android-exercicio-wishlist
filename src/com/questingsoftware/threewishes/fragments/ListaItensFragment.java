@@ -4,26 +4,26 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.questingsoftware.threewishes.MainActivity;
 import com.questingsoftware.threewishes.R;
 import com.questingsoftware.threewishes.controller.ListaItensAdapter;
 import com.questingsoftware.threewishes.model.WishItem;
 import com.questingsoftware.threewishes.persistence.DBOpenHelper;
 
-public class ListaItensFragment extends Fragment {
+public class ListaItensFragment extends SherlockFragment {
 
 	private ListaItemCallback callback;
 	private ListaItensAdapter adapter;

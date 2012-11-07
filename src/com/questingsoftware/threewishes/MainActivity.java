@@ -1,16 +1,16 @@
 package com.questingsoftware.threewishes;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.Menu;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.questingsoftware.threewishes.fragments.CadastrarItemFragment;
 import com.questingsoftware.threewishes.fragments.CadastrarItemFragment.CadastroItemCallback;
 import com.questingsoftware.threewishes.fragments.ListaItensFragment;
 import com.questingsoftware.threewishes.fragments.ListaItensFragment.ListaItemCallback;
 
-public class MainActivity extends FragmentActivity implements ListaItemCallback,CadastroItemCallback{
+public class MainActivity extends SherlockFragmentActivity implements ListaItemCallback,CadastroItemCallback{
 	
 	public static final String APP_LOG_TAG = "ThreeWishesAppTag";
 
@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity implements ListaItemCallback,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+    	getSherlock().getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
 
