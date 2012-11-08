@@ -2,12 +2,18 @@ package com.questingsoftware.threewishes.fragments;
 
 import java.math.BigDecimal;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -18,6 +24,7 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.questingsoftware.threewishes.MainActivity;
 import com.questingsoftware.threewishes.R;
 import com.questingsoftware.threewishes.model.WishItem;
+import com.questingsoftware.threewishes.net.HttpUtil;
 import com.questingsoftware.threewishes.persistence.DBOpenHelper;
 
 public class CadastrarItemFragment extends SherlockFragment implements
@@ -80,6 +87,56 @@ public class CadastrarItemFragment extends SherlockFragment implements
 		editPrecoMinimo = (EditText) returnView.findViewById(R.id.editMinPrice);
 		editPrecoMaximo = (EditText) returnView.findViewById(R.id.editMaxPrice);
 
+		// Anexa ações aos botões da tela
+		Button botaoBuscape = (Button) returnView
+				.findViewById(R.id.buttonExternal);
+		botaoBuscape.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+				new AsyncTask<String, Void, String>() {
+					
+					@Override
+					protected String doInBackground(String... params) {
+						String productDescriptionText = null;
+						
+						Log.d(MainActivity.APP_LOG_TAG,getSherlockActivity().getString(
+								R.string.debug_json_communication));
+						
+						String json = HttpUtil.doGet(params[0]);
+						System.out.println(json);
+						//Log.d(MainActivity.APP_LOG_TAG,json);
+						
+						try {
+							JSONObject jsonObject = new JSONObject(json);
+							JSONArray jsonArray = jsonObject.getJSONArray("product");
+							
+							for (int i = 0; i < jsonArray.length(); i++) {
+								JSONObject productObject = jsonArray.getJSONObject(i);
+								JSONObject productDescription = productObject.getJSONObject("product");
+								productDescriptionText = productDescription.getString("productname");
+							}
+							
+						} catch (JSONException e) {
+							productDescriptionText = null;
+							e.printStackTrace();
+						}
+
+						return productDescriptionText;
+					}
+
+					@Override
+					protected void onPostExecute(String result) {
+						super.onPostExecute(result);
+
+						if (editCategoria!=null){
+							editCategoria.setText(result);
+						}
+					}
+				}.execute("http://sandbox.buscape.com/service/findProductList/72577349624e6c685068513d/?keyword=keyword&format=json");
+			}
+		});
+
 		copyItemToForm();
 
 		return returnView;
@@ -91,6 +148,7 @@ public class CadastrarItemFragment extends SherlockFragment implements
 		inflater.inflate(R.menu.activity_cadastro_item, menu);
 
 		menu.findItem(R.id.menu_save).setOnMenuItemClickListener(this);
+		menu.findItem(R.id.menu_cancel).setOnMenuItemClickListener(this);
 	}
 
 	@Override
@@ -132,9 +190,10 @@ public class CadastrarItemFragment extends SherlockFragment implements
 	}
 
 	/**
-	 * Chamado quando a aplicação será destruída para uma mudança de configuração
-	 * (ex: giro de tela). Salva os dados já informados pelo usuário para que após
-	 * a reconstrução da tela o usuário possa continuar de onde ele parou
+	 * Chamado quando a aplicação será destruída para uma mudança de
+	 * configuração (ex: giro de tela). Salva os dados já informados pelo
+	 * usuário para que após a reconstrução da tela o usuário possa continuar de
+	 * onde ele parou
 	 * 
 	 */
 	private void copyItemToBundle(Bundle bundle) {
@@ -157,8 +216,8 @@ public class CadastrarItemFragment extends SherlockFragment implements
 
 	/**
 	 * Chamado após restaurar de uma mudança de configuração (ex: giro de tela).
-	 * Pega os dados salvos no bundle para restaurar o item que estava sendo inserido/editado
-	 * sem perda de dados para o usuário
+	 * Pega os dados salvos no bundle para restaurar o item que estava sendo
+	 * inserido/editado sem perda de dados para o usuário
 	 */
 	private void copyBundleToItem(Bundle bundle) {
 		if (itemEditado == null) {
@@ -170,14 +229,14 @@ public class CadastrarItemFragment extends SherlockFragment implements
 		itemEditado.setCategoria(bundle.getString("categoria"));
 		itemEditado.setLocal(bundle.getString("local"));
 		itemEditado.setContato(bundle.getString("contato"));
-		
+
 		String strPrecoMinimo = bundle.getString("precoMinimo");
-		if (strPrecoMinimo!=null && strPrecoMinimo.length()>0){
+		if (strPrecoMinimo != null && strPrecoMinimo.length() > 0) {
 			itemEditado.setPrecoMinimo(new BigDecimal(strPrecoMinimo));
 		}
-		
+
 		String strPrecoMaximo = bundle.getString("precoMaximo");
-		if (strPrecoMaximo!=null && strPrecoMaximo.length()>0){
+		if (strPrecoMaximo != null && strPrecoMaximo.length() > 0) {
 			itemEditado.setPrecoMaximo(new BigDecimal(strPrecoMaximo));
 		}
 	}
@@ -190,8 +249,9 @@ public class CadastrarItemFragment extends SherlockFragment implements
 
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
-		// Apertada opção salvar
-		if (item.getItemId() == R.id.menu_save) {
+		switch(item.getItemId()){
+		case R.id.menu_save:
+			// Apertada opção salvar
 			copyFormToItem();
 
 			if (itemEditado.getId() == null || itemEditado.getId() == 0) {
@@ -204,9 +264,17 @@ public class CadastrarItemFragment extends SherlockFragment implements
 			if (callback != null) {
 				callback.callItemList();
 			}
+			return true;
+			
+		case R.id.menu_cancel:
+			//Apertado o botão cancelar
+			if (callback != null) {
+				callback.callItemList();
+			}
+			return true;
 		}
-
-		return true;
+		
+		return false;
 	}
 
 	public interface CadastroItemCallback {

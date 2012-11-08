@@ -21,5 +21,8 @@
     <string name="menu_new">Novo</string>
     <string name="debug_newitem_attach_activity">Anexando form de cadastro à Activity</string>
     <string name="debug_itemlist_attach_activity">Anexando lista de itens à Activity</string>
+    <string name="debug_json_communication">Iniciando comunicação JSON</string>
+    <string name="debug_item_edit">Editando item</string>
+    <string name="menu_cancel">Cancelar</string>
 
 </resources>

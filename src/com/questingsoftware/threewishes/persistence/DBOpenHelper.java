@@ -106,6 +106,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	public static void update(WishItem itemEditado, Context context) {
 		SQLiteDatabase db = getInstance(context).getWritableDatabase();
 		
+		db.beginTransaction();
 		ContentValues values = new ContentValues();
 		values.put("nome", itemEditado.getNome());
 		values.put("categoria", itemEditado.getCategoria());
@@ -114,7 +115,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		values.put("precoMinimo", itemEditado.getPrecoMinimo().toString());
 		values.put("precoMaximo", itemEditado.getPrecoMaximo().toString());
 		
-		db.update(TABELA_WISHLIST, null, "id=?", new String[]{itemEditado.getId().toString()});
+		db.update(TABELA_WISHLIST, values, "id=?", new String[]{itemEditado.getId().toString()});
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 
 }

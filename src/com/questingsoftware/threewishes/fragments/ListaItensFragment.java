@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -27,6 +27,9 @@ public class ListaItensFragment extends SherlockFragment {
 
 	private ListaItemCallback callback;
 	private ListaItensAdapter adapter;
+	private ListaItensSelectCallback listaItensSelectCallback;
+	private ActionMode actionMode;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,13 +60,26 @@ public class ListaItensFragment extends SherlockFragment {
 		
 		adapter = new ListaItensAdapter(container.getContext(), lista);
 		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		
+		/*
+		 * Anexa uma action bar contextual que aparece ao segurar um item na tela. Esta action bar
+		 * contextual conterá ações como editar e excluir o item selecionado.
+		 */
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (callback != null) {
-					callback.callItemEdit(id);
+			public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
+				if (actionMode!=null){
+					return false;
 				}
+
+				if (listaItensSelectCallback==null){
+					listaItensSelectCallback = new ListaItensSelectCallback();
+				}
+				
+				WishItem item = (WishItem) parent.getItemAtPosition(position);
+				listaItensSelectCallback.setIdSelectedItem(item.getId());
+				actionMode = getSherlockActivity().startActionMode(listaItensSelectCallback);
+				return true;
 			}
 		});
 
@@ -87,11 +103,65 @@ public class ListaItensFragment extends SherlockFragment {
 		});
 	}
 
+	/**
+	 * Classes {@link Activity} que implementam este callback
+	 * podem receber solicitações deste fragment para executar ações.
+	 *
+	 */
 	public interface ListaItemCallback {
 
 		public void callItemEdit(Long itemId);
 
 		public void callItemInsert();
 
+	}
+	
+	/**
+	 * Classe que gerencia as ações contextuais executadas em cima de itens
+	 * selecionados pelo usuário.
+	 * 
+	 *
+	 */
+	private class ListaItensSelectCallback implements ActionMode.Callback{
+		
+		private Long idSelectedItem;
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.getMenuInflater().inflate(R.menu.actionmode_lista_itens, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()){
+			case R.id.itemEdit:
+				mode.finish();
+				
+				if (callback!=null){
+					Log.d(MainActivity.APP_LOG_TAG,ListaItensFragment.this.getSherlockActivity().getString(R.string.debug_item_edit));
+					callback.callItemEdit(idSelectedItem);
+				}
+				
+				return true;
+			}
+
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			actionMode = null;
+		}
+
+		public void setIdSelectedItem(Long idSelectedItem) {
+			this.idSelectedItem = idSelectedItem;
+		}
+		
 	}
 }

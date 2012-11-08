@@ -917,10 +917,12 @@ containing a value of this type.
         public static final int abs__textfield_searchview_holo_light=0x7f02006c;
         public static final int abs__textfield_searchview_right_holo_dark=0x7f02006d;
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
-        public static final int ic_action_confirm=0x7f02006f;
-        public static final int ic_action_new=0x7f020070;
-        public static final int ic_action_search=0x7f020071;
-        public static final int ic_launcher=0x7f020072;
+        public static final int ic_action_cancel=0x7f02006f;
+        public static final int ic_action_confirm=0x7f020070;
+        public static final int ic_action_edit=0x7f020071;
+        public static final int ic_action_new=0x7f020072;
+        public static final int ic_action_search=0x7f020073;
+        public static final int ic_launcher=0x7f020074;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040022;
@@ -975,12 +977,14 @@ containing a value of this type.
         public static final int editMinPrice=0x7f04003b;
         public static final int edit_query=0x7f040027;
         public static final int homeAsUp=0x7f040006;
+        public static final int itemEdit=0x7f040042;
         public static final int itemPicture=0x7f040034;
         public static final int listItemDescription=0x7f04003e;
         public static final int listMode=0x7f040002;
-        public static final int menu_new=0x7f040043;
-        public static final int menu_save=0x7f040042;
-        public static final int menu_settings=0x7f040044;
+        public static final int menu_cancel=0x7f040043;
+        public static final int menu_new=0x7f040045;
+        public static final int menu_save=0x7f040044;
+        public static final int menu_settings=0x7f040046;
         public static final int normal=0x7f040001;
         public static final int scrollView=0x7f040033;
         public static final int showCustom=0x7f040008;
@@ -1029,9 +1033,10 @@ containing a value of this type.
         public static final int sherlock_spinner_item=0x7f03001d;
     }
     public static final class menu {
-        public static final int activity_cadastro_item=0x7f0b0000;
-        public static final int activity_lista_itens=0x7f0b0001;
-        public static final int activity_main=0x7f0b0002;
+        public static final int actionmode_lista_itens=0x7f0b0000;
+        public static final int activity_cadastro_item=0x7f0b0001;
+        public static final int activity_lista_itens=0x7f0b0002;
+        public static final int activity_main=0x7f0b0003;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1082,13 +1087,16 @@ containing a value of this type.
         public static final int app_name=0x7f09000f;
         public static final int category=0x7f090016;
         public static final int contact=0x7f090018;
+        public static final int debug_item_edit=0x7f090025;
         public static final int debug_itemlist_attach_activity=0x7f090023;
+        public static final int debug_json_communication=0x7f090024;
         public static final int debug_newitem_attach_activity=0x7f090022;
         public static final int external_site_buscape=0x7f090019;
         public static final int hello_world=0x7f090010;
         public static final int item_description=0x7f09001f;
         public static final int item_picture_description=0x7f090013;
         public static final int max_price=0x7f09001b;
+        public static final int menu_cancel=0x7f090026;
         public static final int menu_new=0x7f090021;
         public static final int menu_save=0x7f09001e;
         public static final int menu_settings=0x7f090011;
