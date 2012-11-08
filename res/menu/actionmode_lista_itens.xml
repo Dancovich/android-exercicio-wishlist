@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/itemEdit" android:title="Editar"
+    <item
+        android:id="@+id/itemEdit"
         android:icon="@drawable/ic_action_edit"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_edit"/>
+    <item
+        android:id="@+id/itemCheckPrice"
+        android:icon="@drawable/ic_action_checkprice"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_checkprice"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/itemDelete"
+        android:icon="@drawable/ic_action_delete"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_delete"/>
 </menu>

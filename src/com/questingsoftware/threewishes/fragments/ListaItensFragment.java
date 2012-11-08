@@ -1,8 +1,12 @@
 package com.questingsoftware.threewishes.fragments;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +26,7 @@ import com.questingsoftware.threewishes.R;
 import com.questingsoftware.threewishes.controller.ListaItensAdapter;
 import com.questingsoftware.threewishes.model.WishItem;
 import com.questingsoftware.threewishes.persistence.DBOpenHelper;
+import com.questingsoftware.threewishes.service.ConsultaPrecoService;
 
 public class ListaItensFragment extends SherlockFragment {
 
@@ -29,7 +34,8 @@ public class ListaItensFragment extends SherlockFragment {
 	private ListaItensAdapter adapter;
 	private ListaItensSelectCallback listaItensSelectCallback;
 	private ActionMode actionMode;
-	
+
+	private PendingIntent pendingIntent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +46,9 @@ public class ListaItensFragment extends SherlockFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
-		Log.d(MainActivity.APP_LOG_TAG, activity.getString(R.string.debug_itemlist_attach_activity));
+
+		Log.d(MainActivity.APP_LOG_TAG,
+				activity.getString(R.string.debug_itemlist_attach_activity));
 
 		if (activity instanceof ListaItemCallback) {
 			callback = (ListaItemCallback) activity;
@@ -57,28 +64,31 @@ public class ListaItensFragment extends SherlockFragment {
 				R.layout.lista_itens, null);
 
 		List<WishItem> lista = DBOpenHelper.selectAll(getActivity());
-		
+
 		adapter = new ListaItensAdapter(container.getContext(), lista);
 		listView.setAdapter(adapter);
-		
+
 		/*
-		 * Anexa uma action bar contextual que aparece ao segurar um item na tela. Esta action bar
-		 * contextual conterá ações como editar e excluir o item selecionado.
+		 * Anexa uma action bar contextual que aparece ao segurar um item na
+		 * tela. Esta action bar contextual conterá ações como editar e excluir
+		 * o item selecionado.
 		 */
 		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
-				if (actionMode!=null){
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (actionMode != null) {
 					return false;
 				}
 
-				if (listaItensSelectCallback==null){
+				if (listaItensSelectCallback == null) {
 					listaItensSelectCallback = new ListaItensSelectCallback();
 				}
-				
+
 				WishItem item = (WishItem) parent.getItemAtPosition(position);
 				listaItensSelectCallback.setIdSelectedItem(item.getId());
-				actionMode = getSherlockActivity().startActionMode(listaItensSelectCallback);
+				actionMode = getSherlockActivity().startActionMode(
+						listaItensSelectCallback);
 				return true;
 			}
 		});
@@ -95,7 +105,7 @@ public class ListaItensFragment extends SherlockFragment {
 		menuNew.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				if (callback!=null){
+				if (callback != null) {
 					callback.callItemInsert();
 				}
 				return true;
@@ -104,9 +114,9 @@ public class ListaItensFragment extends SherlockFragment {
 	}
 
 	/**
-	 * Classes {@link Activity} que implementam este callback
-	 * podem receber solicitações deste fragment para executar ações.
-	 *
+	 * Classes {@link Activity} que implementam este callback podem receber
+	 * solicitações deste fragment para executar ações.
+	 * 
 	 */
 	public interface ListaItemCallback {
 
@@ -115,15 +125,15 @@ public class ListaItensFragment extends SherlockFragment {
 		public void callItemInsert();
 
 	}
-	
+
 	/**
 	 * Classe que gerencia as ações contextuais executadas em cima de itens
 	 * selecionados pelo usuário.
 	 * 
-	 *
+	 * 
 	 */
-	private class ListaItensSelectCallback implements ActionMode.Callback{
-		
+	private class ListaItensSelectCallback implements ActionMode.Callback {
+
 		private Long idSelectedItem;
 
 		@Override
@@ -139,15 +149,44 @@ public class ListaItensFragment extends SherlockFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()){
+			switch (item.getItemId()) {
 			case R.id.itemEdit:
 				mode.finish();
-				
-				if (callback!=null){
-					Log.d(MainActivity.APP_LOG_TAG,ListaItensFragment.this.getSherlockActivity().getString(R.string.debug_item_edit));
+
+				if (callback != null) {
+					Log.d(MainActivity.APP_LOG_TAG,
+							ListaItensFragment.this.getSherlockActivity()
+									.getString(R.string.debug_item_edit));
 					callback.callItemEdit(idSelectedItem);
 				}
-				
+
+				return true;
+
+			case R.id.itemCheckPrice:
+				item.setChecked( !item.isChecked() );
+
+				if (item.isChecked()){
+					if (pendingIntent!=null){
+						pendingIntent.cancel();
+					}
+					
+					Activity myActivity = ListaItensFragment.this.getSherlockActivity();
+					
+					Intent intent = new Intent(myActivity,ConsultaPrecoService.class);
+					intent.putExtra(ConsultaPrecoService.EXTRA_ID_ITEM, this.idSelectedItem);
+					pendingIntent = PendingIntent.getService(myActivity, 0, intent, 0);
+					
+					AlarmManager alarmManager = (AlarmManager) myActivity.getSystemService(Activity.ALARM_SERVICE);
+					alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(), 10000, pendingIntent);
+				}
+				else{
+					if (pendingIntent!=null){
+						pendingIntent.cancel();
+					}
+					pendingIntent = null;
+				}
+
+				mode.finish();
 				return true;
 			}
 
@@ -162,6 +201,6 @@ public class ListaItensFragment extends SherlockFragment {
 		public void setIdSelectedItem(Long idSelectedItem) {
 			this.idSelectedItem = idSelectedItem;
 		}
-		
+
 	}
 }

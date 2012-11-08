@@ -1,10 +1,12 @@
 package com.questingsoftware.threewishes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.questingsoftware.threewishes.fragments.CadastrarItemFragment;
 import com.questingsoftware.threewishes.fragments.CadastrarItemFragment.CadastroItemCallback;
 import com.questingsoftware.threewishes.fragments.ListaItensFragment;
@@ -32,6 +34,15 @@ public class MainActivity extends SherlockFragmentActivity implements ListaItemC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	getSherlock().getMenuInflater().inflate(R.menu.activity_main, menu);
+    	menu.findItem(R.id.menu_settings)
+    		.setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					Intent intent = new Intent(MainActivity.this,PreferenceActivity.class);
+					startActivity(intent);
+					return true;
+				}
+			} );
         return true;
     }
 

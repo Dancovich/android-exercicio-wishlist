@@ -24,5 +24,10 @@
     <string name="debug_json_communication">Iniciando comunicação JSON</string>
     <string name="debug_item_edit">Editando item</string>
     <string name="menu_cancel">Cancelar</string>
+    <string name="notification_price_change">O valor atual de %1s foi alterado para $2d.</string>
+    <string name="menu_edit">Editar</string>
+    <string name="menu_delete">Excluir</string>
+    <string name="menu_checkprice">Consultar Preço</string>
+    <string name="consulta_preco_service">Serviço de Consulta de Preços</string>
 
 </resources>
