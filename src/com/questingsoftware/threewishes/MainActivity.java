@@ -1,5 +1,7 @@
 package com.questingsoftware.threewishes;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,7 @@ import com.questingsoftware.threewishes.fragments.CadastrarItemFragment;
 import com.questingsoftware.threewishes.fragments.CadastrarItemFragment.CadastroItemCallback;
 import com.questingsoftware.threewishes.fragments.ListaItensFragment;
 import com.questingsoftware.threewishes.fragments.ListaItensFragment.ListaItemCallback;
+import com.questingsoftware.threewishes.service.ConsultaPrecoService;
 
 public class MainActivity extends SherlockFragmentActivity implements ListaItemCallback,CadastroItemCallback{
 	
@@ -44,6 +47,12 @@ public class MainActivity extends SherlockFragmentActivity implements ListaItemC
 				}
 			} );
         return true;
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	activateNotificationService();
     }
 
 	@Override
@@ -83,6 +92,14 @@ public class MainActivity extends SherlockFragmentActivity implements ListaItemC
 			.add(new ListaItensFragment(), null)
 			.addToBackStack(FRAGMENT_BACKSTACK_START_STATE)
 			.commit();*/
+	}
+	
+	private void activateNotificationService(){
+		Intent intent = new Intent(this, ConsultaPrecoService.class);
+		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+		
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, 20000, pendingIntent);
 	}
 
 }

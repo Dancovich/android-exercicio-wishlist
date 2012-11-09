@@ -1,12 +1,8 @@
 package com.questingsoftware.threewishes.fragments;
 
-import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +22,6 @@ import com.questingsoftware.threewishes.R;
 import com.questingsoftware.threewishes.controller.ListaItensAdapter;
 import com.questingsoftware.threewishes.model.WishItem;
 import com.questingsoftware.threewishes.persistence.DBOpenHelper;
-import com.questingsoftware.threewishes.service.ConsultaPrecoService;
 
 public class ListaItensFragment extends SherlockFragment {
 
@@ -34,8 +29,6 @@ public class ListaItensFragment extends SherlockFragment {
 	private ListaItensAdapter adapter;
 	private ListaItensSelectCallback listaItensSelectCallback;
 	private ActionMode actionMode;
-
-	private PendingIntent pendingIntent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +79,7 @@ public class ListaItensFragment extends SherlockFragment {
 				}
 
 				WishItem item = (WishItem) parent.getItemAtPosition(position);
-				listaItensSelectCallback.setIdSelectedItem(item.getId());
+				listaItensSelectCallback.setSelectedItem(item);
 				actionMode = getSherlockActivity().startActionMode(
 						listaItensSelectCallback);
 				return true;
@@ -134,11 +127,12 @@ public class ListaItensFragment extends SherlockFragment {
 	 */
 	private class ListaItensSelectCallback implements ActionMode.Callback {
 
-		private Long idSelectedItem;
+		private WishItem selectedItem;
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.getMenuInflater().inflate(R.menu.actionmode_lista_itens, menu);
+			menu.findItem(R.id.itemCheckPrice).setChecked(selectedItem.getAtualizarPreco());
 			return true;
 		}
 
@@ -157,50 +151,32 @@ public class ListaItensFragment extends SherlockFragment {
 					Log.d(MainActivity.APP_LOG_TAG,
 							ListaItensFragment.this.getSherlockActivity()
 									.getString(R.string.debug_item_edit));
-					callback.callItemEdit(idSelectedItem);
+					callback.callItemEdit(selectedItem.getId());
 				}
 
 				return true;
 
 			case R.id.itemCheckPrice:
 				item.setChecked( !item.isChecked() );
-
-				if (item.isChecked()){
-					if (pendingIntent!=null){
-						pendingIntent.cancel();
-					}
-					
-					Activity myActivity = ListaItensFragment.this.getSherlockActivity();
-					
-					Intent intent = new Intent(myActivity,ConsultaPrecoService.class);
-					intent.putExtra(ConsultaPrecoService.EXTRA_ID_ITEM, this.idSelectedItem);
-					pendingIntent = PendingIntent.getService(myActivity, 0, intent, 0);
-					
-					AlarmManager alarmManager = (AlarmManager) myActivity.getSystemService(Activity.ALARM_SERVICE);
-					alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(), 10000, pendingIntent);
-				}
-				else{
-					if (pendingIntent!=null){
-						pendingIntent.cancel();
-					}
-					pendingIntent = null;
-				}
-
+				selectedItem.setAtualizarPreco(item.isChecked());
+				DBOpenHelper.update(selectedItem, getSherlockActivity());
 				mode.finish();
 				return true;
 			}
 
 			return false;
 		}
-
+		
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			actionMode = null;
 		}
 
-		public void setIdSelectedItem(Long idSelectedItem) {
-			this.idSelectedItem = idSelectedItem;
+		public void setSelectedItem(WishItem selectedItem) {
+			this.selectedItem = selectedItem;
 		}
+
+		
 
 	}
 }

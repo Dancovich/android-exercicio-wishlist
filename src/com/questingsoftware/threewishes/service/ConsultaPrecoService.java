@@ -1,5 +1,7 @@
 package com.questingsoftware.threewishes.service;
 
+import java.util.ArrayList;
+
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -18,40 +20,43 @@ import com.questingsoftware.threewishes.persistence.DBOpenHelper;
  */
 public class ConsultaPrecoService extends IntentService {
 
-	public static String EXTRA_ID_ITEM = "extraIdItem";
-	
 	private static final String THREAD_NAME = "PriceCheckThread";
-	
+
 	public ConsultaPrecoService() {
 		super(THREAD_NAME);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		long idItem = intent.getLongExtra(EXTRA_ID_ITEM, 0L);
+		ArrayList<WishItem> itens = DBOpenHelper.selectAll(this);
 
-		if (idItem > 0) {
-			WishItem item = DBOpenHelper.select(idItem, this);
-			if (item != null && item.getNome() != null
-					&& item.getPrecoMinimo() != null) {
-				// Por enquanto informa o preço atual do item mesmo.
-				String text = String.format(
-						this.getString(R.string.notification_price_change),
-						item.getNome(), item.getPrecoMinimo().doubleValue());
+		if (itens != null) {
+			for (WishItem item : itens) {
 
-				final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				if (item.getAtualizarPreco()) {
+					// Por enquanto informa o preço atual do item mesmo.
+					String text = String
+							.format(this
+									.getString(R.string.notification_price_change),
+									item.getNome(), item.getPrecoMinimo()
+											.doubleValue());
 
-				Builder builder = new Builder(this);
-				builder.setWhen(System.currentTimeMillis())
-						.setSmallIcon(R.drawable.ic_launcher)
-						.setTicker("Olha a Faaaaca!")
-						.setContentTitle("Mudança de Preço")
-						.setContentText(text)
-						.setContentInfo("Content Info")
-						.setVibrate(new long[] { 0, 100, 100, 200, 100, 200 })
-						.setLights(0xff00ff00, 300, 100);
+					final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-				notificationManager.notify(1, builder.build());
+					Builder builder = new Builder(this);
+					builder.setWhen(System.currentTimeMillis())
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setTicker("Olha a Faaaaca!")
+							.setContentTitle("Mudança de Preço")
+							.setContentText(text)
+							.setContentInfo("Content Info")
+							.setVibrate(
+									new long[] { 0, 100, 100, 200, 100, 200 })
+							.setLights(0xff00ff00, 300, 100);
+
+					notificationManager.notify(1, builder.build());
+				}
+
 			}
 		}
 	}

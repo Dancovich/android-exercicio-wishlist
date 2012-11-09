@@ -1090,7 +1090,7 @@ containing a value of this type.
         public static final int abs__shareactionprovider_share_with_application=0x7f0a0009;
         public static final int app_name=0x7f0a000f;
         public static final int category=0x7f0a0016;
-        public static final int consulta_preco_service=0x7f0a002b;
+        public static final int consulta_preco_service=0x7f0a002a;
         public static final int contact=0x7f0a0018;
         public static final int debug_item_edit=0x7f0a0025;
         public static final int debug_itemlist_attach_activity=0x7f0a0023;
@@ -1102,7 +1102,6 @@ containing a value of this type.
         public static final int item_picture_description=0x7f0a0013;
         public static final int max_price=0x7f0a001b;
         public static final int menu_cancel=0x7f0a0026;
-        public static final int menu_checkprice=0x7f0a002a;
         public static final int menu_delete=0x7f0a0029;
         public static final int menu_edit=0x7f0a0028;
         public static final int menu_new=0x7f0a0021;

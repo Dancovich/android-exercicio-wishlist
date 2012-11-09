@@ -8,8 +8,8 @@
     <item
         android:id="@+id/itemCheckPrice"
         android:icon="@drawable/ic_action_checkprice"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_checkprice"
+        android:showAsAction="never"
+        android:title="@string/notify_price"
         android:checkable="true"/>
     <item
         android:id="@+id/itemDelete"

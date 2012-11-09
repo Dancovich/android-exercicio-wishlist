@@ -104,22 +104,21 @@ public class CadastrarItemFragment extends SherlockFragment implements
 								R.string.debug_json_communication));
 						
 						String json = HttpUtil.doGet(params[0]);
-						System.out.println(json);
-						//Log.d(MainActivity.APP_LOG_TAG,json);
-						
-						try {
-							JSONObject jsonObject = new JSONObject(json);
-							JSONArray jsonArray = jsonObject.getJSONArray("product");
-							
-							for (int i = 0; i < jsonArray.length(); i++) {
-								JSONObject productObject = jsonArray.getJSONObject(i);
-								JSONObject productDescription = productObject.getJSONObject("product");
-								productDescriptionText = productDescription.getString("productname");
+						if (json!=null){
+							try {
+								JSONObject jsonObject = new JSONObject(json);
+								JSONArray jsonArray = jsonObject.getJSONArray("product");
+								
+								for (int i = 0; i < jsonArray.length(); i++) {
+									JSONObject productObject = jsonArray.getJSONObject(i);
+									JSONObject productDescription = productObject.getJSONObject("product");
+									productDescriptionText = productDescription.getString("productname");
+								}
+								
+							} catch (JSONException e) {
+								productDescriptionText = null;
+								e.printStackTrace();
 							}
-							
-						} catch (JSONException e) {
-							productDescriptionText = null;
-							e.printStackTrace();
 						}
 
 						return productDescriptionText;

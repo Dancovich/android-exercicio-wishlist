@@ -13,7 +13,7 @@ import com.questingsoftware.threewishes.model.WishItem;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
 	
-	private static final int VERSAO = 1;
+	private static final int VERSAO = 2;
 	private static final String ARQUIVO_DB = "wishlist.db";
 	private static final String TABELA_WISHLIST = "wishlist";
 	
@@ -33,13 +33,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("create table wishlist (id INTEGER PRIMARY KEY ASC,nome TEXT,categoria TEXT,local TEXT,contato TEXT,precoMinimo REAL,precoMaximo REAL)");
+		db.execSQL("create table wishlist (id INTEGER PRIMARY KEY ASC,nome TEXT,categoria TEXT,local TEXT,contato TEXT,precoMinimo REAL,precoMaximo REAL,atualizarPreco INTEGER)");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
-
+		if (oldVersion<=1){
+			db.execSQL("alter table wishlist add column atualizarPreco INTEGER");
+		}
 	}
 	
 	public static void insert(WishItem item,Context context){
@@ -52,6 +53,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		values.put("contato", item.getContato());
 		values.put("precoMinimo", item.getPrecoMinimo().toString());
 		values.put("precoMaximo", item.getPrecoMaximo().toString());
+		
+		String atualizarPreco = item.getAtualizarPreco()==null || !item.getAtualizarPreco().booleanValue() ? "0" : "1";
+		values.put("atualizarPreco", atualizarPreco);
 		
 		item.setId(db.insert(TABELA_WISHLIST,null,values));
 	}
@@ -71,6 +75,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 			item.setContato(c.getString(c.getColumnIndex("contato")));
 			item.setPrecoMinimo(new BigDecimal(c.getString(c.getColumnIndex("precoMinimo"))));
 			item.setPrecoMaximo(new BigDecimal(c.getString(c.getColumnIndex("precoMaximo"))));
+			
+			int atualizarPreco = c.getInt(c.getColumnIndex("atualizarPreco"));
+			item.setAtualizarPreco(atualizarPreco==1);
 		}
 		
 		c.close();
@@ -94,7 +101,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 			item.setContato(c.getString(c.getColumnIndex("contato")));
 			item.setPrecoMinimo(new BigDecimal(c.getString(c.getColumnIndex("precoMinimo"))));
 			item.setPrecoMaximo(new BigDecimal(c.getString(c.getColumnIndex("precoMaximo"))));
-			
+
+			int atualizarPreco = c.getInt(c.getColumnIndex("atualizarPreco"));
+			item.setAtualizarPreco(atualizarPreco==1);
+
 			retorno.add(item);
 		}
 		
@@ -114,6 +124,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		values.put("contato", itemEditado.getContato());
 		values.put("precoMinimo", itemEditado.getPrecoMinimo().toString());
 		values.put("precoMaximo", itemEditado.getPrecoMaximo().toString());
+		
+		String atualizarPreco = itemEditado.getAtualizarPreco()==null || !itemEditado.getAtualizarPreco().booleanValue() ? "0" : "1";
+		values.put("atualizarPreco", atualizarPreco);
 		
 		db.update(TABELA_WISHLIST, values, "id=?", new String[]{itemEditado.getId().toString()});
 		db.setTransactionSuccessful();

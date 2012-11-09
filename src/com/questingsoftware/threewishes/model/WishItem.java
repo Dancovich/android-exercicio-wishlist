@@ -11,6 +11,7 @@ public class WishItem {
 	private String contato;
 	private BigDecimal precoMinimo;
 	private BigDecimal precoMaximo;
+	private Boolean atualizarPreco;
 	
 	public WishItem(){
 	}
@@ -62,12 +63,16 @@ public class WishItem {
 	public void setPrecoMaximo(BigDecimal precoMaximo) {
 		this.precoMaximo = precoMaximo;
 	}
-
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Boolean getAtualizarPreco() {
+		return atualizarPreco!=null ? atualizarPreco : Boolean.FALSE;
+	}
+	public void setAtualizarPreco(Boolean atualizarPreco) {
+		this.atualizarPreco = atualizarPreco;
 	}
 }
